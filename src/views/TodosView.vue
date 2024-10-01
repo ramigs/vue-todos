@@ -31,10 +31,12 @@ const toggleTodoEdit = (index: number) => {
   todoList.value[index].isEditing = !todoList.value[index].isEditing
 }
 
-const updateTodo = ({ index, newTodo }: { index: number; newTodo: string }) => {
-  console.log(index)
-  console.log(newTodo)
+const updateTodo = (index: number, newTodo: string) => {
   todoList.value[index].todo = newTodo
+}
+
+const deleteTodo = (index: number) => {
+  todoList.value.splice(index, 1)
 }
 </script>
 
@@ -51,6 +53,7 @@ const updateTodo = ({ index, newTodo }: { index: number; newTodo: string }) => {
         @toggle-complete="toggleTodoComplete"
         @edit-click="toggleTodoEdit"
         @todo-edited="updateTodo"
+        @delete-click="deleteTodo"
       />
     </ul>
     <p v-else class="todos-msg">

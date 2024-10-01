@@ -5,7 +5,7 @@ import { ref } from 'vue'
 
 const props = defineProps<{ todo: Todo; index: number }>()
 
-const emit = defineEmits(['toggle-complete', 'edit-click', 'todo-edited'])
+const emit = defineEmits(['toggle-complete', 'edit-click', 'todo-edited', 'delete-click'])
 
 const editedTodo = ref('')
 
@@ -15,10 +15,7 @@ const handleEdit = () => {
 }
 
 const handleEditDone = () => {
-  emit('todo-edited', {
-    index: props.index,
-    newTodo: editedTodo.value
-  })
+  emit('todo-edited', props.index, editedTodo.value)
   emit('edit-click', props.index)
   editedTodo.value = ''
 }
@@ -33,7 +30,7 @@ const handleEditDone = () => {
     </div>
     <div class="todo-actions">
       <Icon
-        v-if="todo.isEditing"
+        v-if="todo.isEditing && editedTodo"
         @click="handleEditDone"
         icon="ph:check-circle"
         class="icon check-icon"
@@ -41,14 +38,20 @@ const handleEditDone = () => {
         width="22"
       />
       <Icon
-        v-else
+        v-else-if="!todo.isEditing"
         @click="handleEdit"
         icon="ph:pencil-fill"
         class="icon edit-icon"
         color="#41b080"
         width="22"
       />
-      <Icon icon="ph:trash" class="icon trash-icon" color="#f95e5e" width="22" />
+      <Icon
+        @click="$emit('delete-click', index)"
+        icon="ph:trash"
+        class="icon trash-icon"
+        color="#f95e5e"
+        width="22"
+      />
     </div>
   </li>
 </template>
