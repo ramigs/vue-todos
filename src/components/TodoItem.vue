@@ -16,7 +16,6 @@ const handleEdit = () => {
 
 const handleEditDone = () => {
   emit('todo-edited', props.index, editedTodo.value)
-  emit('edit-click', props.index)
   editedTodo.value = ''
 }
 </script>

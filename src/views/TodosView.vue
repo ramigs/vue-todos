@@ -21,23 +21,41 @@ const addTodo = (todo: string) => {
     isCompleted: false,
     isEditing: false
   })
+  saveTodoListLocalStorage()
+}
+
+const fetchTodoListLocalStorage = () => {
+  const savedTodoList = localStorage.getItem('todoList')
+  if (savedTodoList) {
+    todoList.value = JSON.parse(savedTodoList)
+  }
+}
+
+const saveTodoListLocalStorage = () => {
+  localStorage.setItem('todoList', JSON.stringify(todoList.value))
 }
 
 const toggleTodoComplete = (index: number) => {
   todoList.value[index].isCompleted = !todoList.value[index].isCompleted
+  saveTodoListLocalStorage()
 }
 
-const toggleTodoEdit = (index: number) => {
-  todoList.value[index].isEditing = !todoList.value[index].isEditing
+const setTodoEditing = (index: number) => {
+  todoList.value[index].isEditing = true
 }
 
 const updateTodo = (index: number, newTodo: string) => {
   todoList.value[index].todo = newTodo
+  todoList.value[index].isEditing = false
+  saveTodoListLocalStorage()
 }
 
 const deleteTodo = (index: number) => {
   todoList.value.splice(index, 1)
+  saveTodoListLocalStorage()
 }
+
+fetchTodoListLocalStorage()
 </script>
 
 <template>
@@ -51,7 +69,7 @@ const deleteTodo = (index: number) => {
         :todo="todo"
         :index="index"
         @toggle-complete="toggleTodoComplete"
-        @edit-click="toggleTodoEdit"
+        @edit-click="setTodoEditing"
         @todo-edited="updateTodo"
         @delete-click="deleteTodo"
       />
