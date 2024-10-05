@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { ref, type Ref } from 'vue'
+import { computed, ref, watch, type Ref } from 'vue'
 import { uid } from 'uid'
 import TodoCreator from '@/components/TodoCreator.vue'
 import TodoItem from '@/components/TodoItem.vue'
@@ -11,8 +11,6 @@ export type Todo = {
   isCompleted: boolean
   isEditing: boolean
 }
-
-const todoList: Ref<Array<Todo>> = ref([])
 
 const addTodo = (todo: string) => {
   todoList.value.push({
@@ -29,6 +27,7 @@ const fetchTodoListLocalStorage = () => {
   if (savedTodoList) {
     todoList.value = JSON.parse(savedTodoList)
   }
+  todoList.value.forEach((todo) => (todo.isEditing = false))
 }
 
 const saveTodoListLocalStorage = () => {
@@ -37,7 +36,6 @@ const saveTodoListLocalStorage = () => {
 
 const toggleTodoComplete = (index: number) => {
   todoList.value[index].isCompleted = !todoList.value[index].isCompleted
-  saveTodoListLocalStorage()
 }
 
 const setTodoEditing = (index: number) => {
@@ -47,13 +45,21 @@ const setTodoEditing = (index: number) => {
 const updateTodo = (index: number, newTodo: string) => {
   todoList.value[index].todo = newTodo
   todoList.value[index].isEditing = false
-  saveTodoListLocalStorage()
 }
 
 const deleteTodo = (index: number) => {
   todoList.value.splice(index, 1)
-  saveTodoListLocalStorage()
 }
+
+const todoList: Ref<Array<Todo>> = ref([])
+
+watch(todoList, saveTodoListLocalStorage, {
+  deep: true
+})
+
+const todoCompleted = computed(() => {
+  return todoList.value.every((todo) => todo.isCompleted)
+})
 
 fetchTodoListLocalStorage()
 </script>
@@ -77,6 +83,10 @@ fetchTodoListLocalStorage()
     <p v-else class="todos-msg">
       <Icon icon="noto-v1:sad-but-relieved-face" />
       <span>You have no todo's to complete! Add one!</span>
+    </p>
+    <p v-if="todoCompleted && todoList.length > 0" class="todos-msg">
+      <Icon icon="noto-v1:party-popper" />
+      <span>You have completed all your todos!</span>
     </p>
   </main>
 </template>
