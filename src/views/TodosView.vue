@@ -68,7 +68,7 @@ fetchTodoListLocalStorage()
   <main>
     <h1>Create Todo</h1>
     <TodoCreator @create-todo="addTodo" />
-    <ul class="todo-list" v-if="todoList.length > 0">
+    <TransitionGroup v-if="todoList.length > 0" class="todo-list" name="list" tag="ul">
       <TodoItem
         v-for="(todo, index) in todoList"
         :key="todo.id"
@@ -79,7 +79,7 @@ fetchTodoListLocalStorage()
         @todo-edited="updateTodo"
         @delete-click="deleteTodo"
       />
-    </ul>
+    </TransitionGroup>
     <p v-else class="todos-msg">
       <Icon icon="noto-v1:sad-but-relieved-face" />
       <span>You have no todo's to complete! Add one!</span>
@@ -111,6 +111,21 @@ main {
     list-style: none;
     margin-top: 24px;
     gap: 20px;
+  }
+
+  .list-move,
+  .list-enter-active,
+  .list-leave-active {
+    transition: all 0.5s ease;
+  }
+  .list-enter-from,
+  .list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+
+  .list-leave-active {
+    position: absolute;
   }
 
   .todos-msg {
