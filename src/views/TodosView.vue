@@ -19,7 +19,6 @@ const addTodo = (todo: string) => {
     isCompleted: false,
     isEditing: false
   })
-  saveTodoListLocalStorage()
 }
 
 const fetchTodoListLocalStorage = () => {
