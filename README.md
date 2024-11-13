@@ -1,7 +1,7 @@
 # vue-todos
 
 Originally from [Vue 3 Crash Course | Project From
-Scratch](https://www.youtube.com/watch?v=KTFH4P8unUQ&t=143s).
+Scratch](https://www.youtube.com/watch?v=KTFH4P8unUQ).
 
 This template should help get you started developing with Vue 3 in Vite.
 
